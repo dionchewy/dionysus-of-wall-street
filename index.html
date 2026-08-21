@@ -1,0 +1,1572 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#0D0D0D;
+    --panel:#181818;
+    --panel-alt:#1D1D1D;
+    --panel-raised:#232323;
+    --border:#2B2B2B;
+    --border-soft:#1F1F1F;
+    --text:#F0F0F0;
+    --muted:#A3A3A3;
+    --muted-dim:#6B6B6B;
+    --accent:#F0629B;
+    --accent-dim:#3A1D2C;
+    --green:#7FC663;
+    --green-dim:#213018;
+    --red:#F4506B;
+    --red-dim:#3D1721;
+    --amber:#E0AC4F;
+    --amber-dim:#3A2E14;
+    --radius:10px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  #twc-root{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    font-size:14px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  #twc-root .mono{font-family:'JetBrains Mono',monospace; font-variant-numeric: tabular-nums;}
+  #twc-root h1,#twc-root h2,#twc-root h3{font-family:'Space Grotesk',sans-serif; margin:0; letter-spacing:-0.01em;}
+
+  /* ---------- Topbar ---------- */
+  #twc-root .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px; border-bottom:1px solid var(--border);
+    position:sticky; top:0; background:rgba(13,13,13,0.92); backdrop-filter:blur(8px);
+    z-index:20; flex-wrap:wrap; gap:12px;
+  }
+  #twc-root .brand{display:flex; align-items:center; gap:10px;}
+  #twc-root .brand-mark{width:30px; height:30px; flex-shrink:0;}
+  #twc-root .brand-text h1{font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:600; color:var(--text); margin:0; white-space:nowrap;}
+  #twc-root .tabs{display:flex; gap:4px; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:3px;}
+  #twc-root .tab-btn{
+    border:none; background:transparent; color:var(--muted); font-family:'Inter',sans-serif;
+    font-size:13px; font-weight:500; padding:7px 14px; border-radius:7px; cursor:pointer;
+    transition:all .15s ease;
+  }
+  #twc-root .tab-btn.active{background:var(--accent); color:#fff;}
+  #twc-root .tab-btn:not(.active):hover{color:var(--text); background:var(--panel-raised);}
+
+  #twc-root .topbar-actions{display:flex; gap:8px; align-items:center;}
+  #twc-root .icon-btn{
+    border:1px solid var(--border); background:var(--panel); color:var(--muted);
+    width:34px; height:34px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .15s ease;
+  }
+  #twc-root .icon-btn:hover{color:var(--text); border-color:var(--muted-dim);}
+
+  #twc-root main{max-width:1200px; margin:0 auto; padding:24px; padding-bottom:80px;}
+  #twc-root .view{display:none;}
+  #twc-root .view.active{display:block; animation:twc-fade .25s ease;}
+  @keyframes twc-fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ---------- Cards / panels ---------- */
+  #twc-root .panel{
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px 20px;
+  }
+  #twc-root .panel + .panel{margin-top:16px;}
+  #twc-root .panel-title{font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:14px; font-weight:600;}
+
+  /* ---------- Pulse strip (signature element) ---------- */
+  /* ---------- Needs-review banner ---------- */
+  /* ---------- Greeting ---------- */
+  #twc-root .greeting{
+    font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:600; color:var(--text);
+    margin-bottom:18px;
+  }
+
+  #twc-root .review-panel{
+    border-left:3px solid var(--amber); background:var(--panel);
+  }
+  #twc-root .review-panel.urgent{border-left-color:var(--red);}
+  #twc-root .review-head{display:flex; align-items:flex-start; gap:12px; margin-bottom:4px;}
+  #twc-root .review-icon{font-size:18px; line-height:1;}
+  #twc-root .review-title{font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:600; color:var(--text);}
+  #twc-root .review-sub{font-size:12px; color:var(--muted); margin-top:2px;}
+  #twc-root .review-list{margin-top:14px; display:flex; flex-direction:column; gap:8px;}
+  #twc-root .review-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:var(--panel-alt); border:1px solid var(--border-soft); border-radius:8px; padding:10px 14px;
+  }
+  #twc-root .review-row-left{display:flex; align-items:center; gap:10px;}
+  #twc-root .review-instrument{font-weight:600; font-size:13px; color:var(--text);}
+  #twc-root .review-days{
+    font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; padding:2px 8px; border-radius:20px;
+  }
+  #twc-root .review-days.warn{background:var(--amber-dim); color:var(--amber);}
+  #twc-root .review-days.urgent{background:var(--red-dim); color:var(--red);}
+
+  /* ---------- Advanced stats toggle ---------- */
+  #twc-root .advanced-toggle{
+    background:none; border:none; color:var(--muted); font-family:'Inter',sans-serif; font-size:12px;
+    font-weight:600; text-transform:uppercase; letter-spacing:0.05em;
+    cursor:pointer; padding:28px 0 12px; display:flex; align-items:center; gap:6px; margin:0 auto;
+    transition:color .15s;
+  }
+  #twc-root .advanced-toggle:hover{color:var(--accent);}
+
+  /* ---------- Tab badge ---------- */
+  #twc-root .tab-badge{
+    display:inline-flex; align-items:center; justify-content:center; min-width:16px; height:16px;
+    background:var(--red); color:#fff; font-size:10px; font-weight:700; border-radius:20px;
+    padding:0 4px; margin-left:6px; font-family:'JetBrains Mono',monospace;
+  }
+
+  #twc-root .pulse-wrap{padding:20px 20px 14px;}
+  #twc-root .pulse-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px;}
+  #twc-root .pulse-head h2{font-size:15px; color:var(--text);}
+  #twc-root .pulse-head .sub{font-size:11.5px; color:var(--muted-dim);}
+  #twc-root .pulse-strip{
+    display:flex; align-items:flex-end; gap:3px; height:64px; overflow-x:auto; padding-bottom:2px;
+  }
+  #twc-root .pulse-bar{
+    flex:0 0 auto; width:7px; min-height:4px; border-radius:2px 2px 0 0;
+    cursor:default; transition:opacity .15s;
+  }
+  #twc-root .pulse-bar:hover{opacity:0.7;}
+  #twc-root .pulse-empty{color:var(--muted-dim); font-size:13px; padding:10px 0;}
+
+  /* ---------- Stat grid ---------- */
+  #twc-root .stat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px;}
+  #twc-root .stat-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px 16px;
+  }
+  #twc-root .stat-label{font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;}
+  #twc-root .stat-value{font-family:'JetBrains Mono',monospace; font-size:19px; font-weight:600; color:var(--text);}
+  #twc-root .stat-value.pos{color:var(--green);}
+  #twc-root .stat-value.neg{color:var(--red);}
+
+  #twc-root .chart-grid{display:grid; grid-template-columns:1.4fr 1fr; gap:16px; margin-top:16px;}
+  #twc-root .chart-box canvas{max-height:220px;}
+  #twc-root .chart-divider{height:1px; background:var(--border); margin:20px 0 16px;}
+  #twc-root .chart-caption{font-size:12px; color:var(--muted); margin-bottom:12px;}
+  #twc-root canvas{max-height:220px;}
+
+  @media (max-width:900px){
+    #twc-root .stat-grid{grid-template-columns:repeat(2,1fr);}
+    #twc-root .chart-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Forms ---------- */
+  #twc-root .form-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px 16px;}
+  #twc-root .field{display:flex; flex-direction:column; gap:6px;}
+  #twc-root .field.span-2{grid-column:span 2;}
+  #twc-root .field.span-4{grid-column:span 4;}
+  #twc-root label{font-size:11.5px; color:var(--muted); font-weight:500; display:flex; justify-content:space-between;}
+  #twc-root label .hint{color:var(--muted-dim); font-weight:400; font-size:10.5px;}
+  #twc-root input, #twc-root select, #twc-root textarea{
+    background:var(--panel-alt); border:1px solid var(--border); color:var(--text);
+    border-radius:7px; padding:9px 10px; font-size:13.5px; font-family:'JetBrains Mono',monospace;
+    outline:none; transition:border-color .15s;
+    width:100%;
+  }
+  #twc-root select, #twc-root textarea{font-family:'Inter',sans-serif;}
+  #twc-root input:focus, #twc-root select:focus, #twc-root textarea:focus{border-color:var(--accent);}
+  #twc-root textarea{resize:vertical; min-height:56px;}
+  #twc-root .seg{display:flex; border:1px solid var(--border); border-radius:7px; overflow:hidden;}
+  #twc-root .seg button{
+    flex:1; background:var(--panel-alt); color:var(--muted); border:none; padding:9px 0;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:13px; cursor:pointer;
+  }
+  #twc-root .seg button.active.long{background:var(--green-dim); color:var(--green);}
+  #twc-root .seg button.active.short{background:var(--red-dim); color:var(--red);}
+
+  /* ---------- Flexible row grid — all rows share the same 6-unit track so field widths stay in consistent ratios ---------- */
+  #twc-root .form-row{display:grid; grid-template-columns:repeat(6,1fr); gap:20px; margin-bottom:22px;}
+  #twc-root .form-row:last-child{margin-bottom:0;}
+  #twc-root .form-row.cols-1 > .field{grid-column:span 6;}
+  #twc-root .form-row.cols-2 > .field{grid-column:span 3;}
+  #twc-root .form-row.cols-3 > .field{grid-column:span 2;}
+  @media (max-width:760px){
+    #twc-root .form-row.cols-2 > .field, #twc-root .form-row.cols-3 > .field{grid-column:span 6;}
+  }
+
+  #twc-root .divider{height:1px; background:var(--border); margin:18px 0;}
+
+  /* ---------- Section / subsection typography hierarchy ---------- */
+  #twc-root .panel-eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent);
+    text-transform:uppercase; letter-spacing:0.12em; margin-bottom:4px; font-weight:600;
+  }
+  #twc-root .section-label{
+    font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:600; color:var(--text);
+    margin:0 0 20px; letter-spacing:-0.01em; padding-bottom:14px; border-bottom:1px solid var(--border);
+  }
+  #twc-root .subsection-label{
+    font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600; color:var(--muted);
+    text-transform:uppercase; letter-spacing:0.05em; margin:30px 0 16px;
+  }
+  #twc-root .subsection-label:first-of-type{margin-top:0;}
+
+  /* live preview */
+  #twc-root .preview-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  #twc-root .preview-item{
+    background:var(--panel-alt); border:1px solid var(--border-soft); border-radius:8px; padding:10px 12px;
+  }
+  #twc-root .preview-item .pl{font-size:10.5px; color:var(--muted-dim); text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px;}
+  #twc-root .preview-item .pv{font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:600;}
+  #twc-root .preview-item.accent .pv{color:var(--accent);}
+
+  /* ---------- Order ticket cards ---------- */
+  /* Colour reflects PURPOSE (entry / risk / profit), never buy-vs-sell — so it never conflicts with the action label */
+  #twc-root .order-ticket-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+  }
+  #twc-root .order-card{
+    background:var(--panel-alt); border:1px solid var(--border); border-radius:10px;
+    padding:14px; border-top:3px solid var(--muted-dim);
+  }
+  #twc-root .order-card.oc-purpose-entry{border-top-color:var(--accent);}
+  #twc-root .order-card.oc-purpose-loss{border-top-color:var(--red);}
+  #twc-root .order-card.oc-purpose-profit{border-top-color:var(--green);}
+  #twc-root .oc-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
+  #twc-root .oc-title{font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; color:var(--text);}
+  #twc-root .oc-side{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; letter-spacing:0.03em;
+    padding:3px 8px; border-radius:5px; background:var(--panel-raised); color:var(--text);
+    border:1px solid var(--border);
+  }
+  #twc-root .oc-row{margin-bottom:10px;}
+  #twc-root .oc-row:last-child{margin-bottom:0;}
+  #twc-root .oc-row label{margin-bottom:5px;}
+  #twc-root .oc-row input{padding:8px 10px; font-size:14px;}
+  #twc-root .oc-value{
+    font-size:16px; font-weight:600; color:var(--text); padding:8px 10px;
+    background:var(--panel); border:1px solid var(--border-soft); border-radius:7px;
+  }
+  #twc-root .oc-footnote{margin-top:14px; font-size:12px; color:var(--muted); }
+  #twc-root .oc-footnote .mono{color:var(--text); font-weight:600;}
+
+  #twc-root .readout-inline{
+    font-size:14px; font-weight:600; color:var(--text); padding:9px 10px;
+    background:var(--bg); border:1px dashed var(--border); border-radius:7px;
+  }
+
+  /* ---------- USD / unit suffix ---------- */
+  #twc-root .unit-field{position:relative;}
+  #twc-root .unit-field input{padding-right:46px; width:100%;}
+  #twc-root .unit-field .readout-inline, #twc-root .unit-field .ri-value{padding-right:46px;}
+  #twc-root .unit-suffix{
+    position:absolute; right:10px; top:50%; transform:translateY(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; color:var(--muted-dim);
+    letter-spacing:0.03em; pointer-events:none;
+  }
+
+  @media (max-width:900px){
+    #twc-root .order-ticket-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:520px){
+    #twc-root .order-ticket-grid{grid-template-columns:1fr;}
+  }
+
+  #twc-root .form-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:18px;}
+  #twc-root .btn{
+    border:none; border-radius:8px; padding:10px 18px; font-family:'Inter',sans-serif; font-weight:600;
+    font-size:13.5px; cursor:pointer; transition:all .15s ease; display:inline-flex; align-items:center; gap:6px;
+  }
+  #twc-root .btn-primary{background:var(--accent); color:#fff;}
+  #twc-root .btn-primary:hover{background:#D94A82;}
+  #twc-root .btn-ghost{background:var(--panel-alt); color:var(--muted); border:1px solid var(--border);}
+  #twc-root .btn-ghost:hover{color:var(--text);}
+  #twc-root .btn-danger{background:var(--red-dim); color:var(--red);}
+  #twc-root .btn-danger:hover{background:#4E2A20;}
+
+  /* ---------- Readout chips (calculated values) ---------- */
+  #twc-root .readout-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  #twc-root .readout-item{
+    background:var(--bg); border:1px dashed var(--border); border-radius:8px; padding:10px 12px;
+  }
+  #twc-root .ri-label{
+    font-size:10.5px; color:var(--muted-dim); text-transform:uppercase; letter-spacing:0.04em;
+    margin-bottom:6px; display:flex; align-items:center; gap:6px; justify-content:space-between;
+  }
+  #twc-root .ri-value{font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:var(--text);}
+
+  @media (max-width:900px){
+    #twc-root .readout-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:520px){
+    #twc-root .readout-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Table ---------- */
+  #twc-root .table-wrap{overflow-x:auto;}
+  #twc-root table{width:100%; border-collapse:collapse;}
+  #twc-root th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted-dim);
+    padding:8px 8px; border-bottom:1px solid var(--border); font-weight:600; white-space:nowrap;
+  }
+  #twc-root td{padding:8px; border-bottom:1px solid var(--border-soft); font-size:13px; white-space:nowrap;}
+  #twc-root tbody tr:hover{background:rgba(76,141,255,0.08);}
+  #twc-root td.num{font-family:'JetBrains Mono',monospace;}
+  #twc-root .badge{
+    display:inline-flex; align-items:center; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:600;
+  }
+  #twc-root .badge.long{background:var(--green-dim); color:var(--green);}
+  #twc-root .badge.short{background:var(--red-dim); color:var(--red);}
+  #twc-root .badge.win{background:var(--green-dim); color:var(--green);}
+  #twc-root .badge.loss{background:var(--red-dim); color:var(--red);}
+  #twc-root .badge.open{background:var(--amber-dim); color:var(--amber);}
+  #twc-root .badge.be{background:var(--accent-dim); color:var(--accent);}
+  #twc-root .row-select{
+    background:var(--panel-raised); border:1px solid var(--border); color:var(--text);
+    font-family:'Inter',sans-serif; font-size:12px; border-radius:6px; padding:5px 4px; width:100%; min-width:78px;
+  }
+  #twc-root .row-select-outcome{
+    background:var(--panel-raised); border:1px solid var(--border); color:var(--text);
+    font-family:'Inter',sans-serif; font-size:12px; border-radius:6px; padding:5px 4px; width:100%; min-width:175px;
+  }
+  #twc-root .row-input{
+    background:var(--panel-raised); border:1px solid var(--border); color:var(--text);
+    font-family:'JetBrains Mono',monospace; font-size:12px; border-radius:6px; padding:5px 6px;
+    width:76px;
+  }
+  #twc-root .icon-only{
+    border:none; background:transparent; color:var(--muted-dim); cursor:pointer; padding:4px;
+    border-radius:6px;
+  }
+  #twc-root .icon-only:hover{color:var(--red); background:var(--red-dim);}
+  #twc-root .empty-state{text-align:center; padding:60px 20px; color:var(--muted-dim);}
+  #twc-root .empty-state h3{color:var(--text); font-size:16px; margin-bottom:6px;}
+  #twc-root .empty-state p{font-size:13px; margin-bottom:18px;}
+
+  #twc-root .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:var(--panel-raised); border:1px solid var(--border); color:var(--text);
+    padding:10px 18px; border-radius:8px; font-size:13px; box-shadow:0 8px 30px rgba(0,0,0,0.4);
+    opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:100;
+  }
+  #twc-root .toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
+
+  /* ---------- Confirmation modal (replaces native confirm(), which sandboxed artifacts block) ---------- */
+  #twc-root .confirm-overlay{
+    position:fixed; inset:0; background:rgba(5,7,10,0.72); backdrop-filter:blur(3px);
+    display:none; align-items:center; justify-content:center; z-index:200; padding:20px;
+  }
+  #twc-root .confirm-overlay.show{display:flex;}
+  #twc-root .confirm-box{
+    background:var(--panel-raised); border:1px solid var(--border); border-radius:12px;
+    padding:22px; max-width:340px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    animation:twc-fade .15s ease;
+  }
+  #twc-root .confirm-box p{margin:0 0 18px; font-size:14px; color:var(--text); line-height:1.5;}
+  #twc-root .confirm-actions{display:flex; justify-content:flex-end; gap:10px;}
+
+  @media (max-width:760px){
+    #twc-root .form-grid{grid-template-columns:repeat(2,1fr);}
+    #twc-root .field.span-2, #twc-root .field.span-4{grid-column:span 2;}
+    #twc-root .preview-grid{grid-template-columns:repeat(2,1fr);}
+    #twc-root .stat-grid{grid-template-columns:repeat(2,1fr);}
+    #twc-root .topbar{padding:12px 14px;}
+    #twc-root main{padding:14px; padding-bottom:80px;}
+  }
+</style>
+
+<div id="twc-root">
+  <div class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="16" cy="16" rx="3" ry="14" fill="url(#twc-logo-grad)" transform="rotate(0 16 16)"/>
+        <ellipse cx="16" cy="16" rx="3" ry="14" fill="url(#twc-logo-grad)" transform="rotate(60 16 16)"/>
+        <ellipse cx="16" cy="16" rx="3" ry="14" fill="url(#twc-logo-grad)" transform="rotate(120 16 16)"/>
+        <defs>
+          <linearGradient id="twc-logo-grad" x1="0" y1="26" x2="32" y2="6" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#D94A82"/>
+            <stop offset="1" stop-color="#FF8FB8"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="brand-text">
+        <h1>Dionysus of Wall Street</h1>
+      </div>
+    </div>
+    <div class="tabs" id="twc-tabs">
+      <button class="tab-btn active" data-view="dashboard">Dashboard</button>
+      <button class="tab-btn" data-view="new-trade">New Trade</button>
+      <button class="tab-btn" data-view="log">Trade Log<span class="tab-badge" id="twc-log-badge" style="display:none;"></span></button>
+    </div>
+    <div class="topbar-actions">
+      <input type="file" id="twc-import-file" accept=".json" style="display:none;">
+      <button class="icon-btn" id="twc-export-btn" title="Export trades to JSON">⬇</button>
+      <button class="icon-btn" id="twc-import-btn" title="Import trades from JSON">⬆</button>
+      <button class="icon-btn" id="twc-reset-btn" title="Clear all data">🗑</button>
+    </div>
+  </div>
+
+  <main>
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="greeting" id="twc-greeting"></div>
+
+      <div class="panel review-panel" id="twc-review-panel" style="display:none;">
+        <div class="review-head">
+          <span class="review-icon">⏰</span>
+          <div>
+            <div class="review-title">Needs review</div>
+            <div class="review-sub">Trades open 14+ days — decide whether to hold or close manually</div>
+          </div>
+        </div>
+        <div class="review-list" id="twc-review-list"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Performance overview</div>
+        <div class="stat-grid" id="twc-stats-primary"></div>
+        <div class="chart-divider"></div>
+        <div class="chart-caption">Equity curve — your cumulative P&amp;L (USD) over time, trade by trade</div>
+        <canvas id="twc-equity-chart" height="90"></canvas>
+      </div>
+
+      <button class="advanced-toggle" id="twc-advanced-toggle">Show advanced stats ▾</button>
+
+      <div id="twc-advanced-section" style="display:none;">
+        <div class="panel pulse-wrap">
+          <div class="pulse-head">
+            <h2>Trade tape</h2>
+            <span class="sub">each bar = one trade, height = |R multiple|</span>
+          </div>
+          <div class="pulse-strip" id="twc-pulse"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">R-multiple detail</div>
+          <div class="stat-grid" id="twc-stats-advanced"></div>
+          <div class="chart-divider"></div>
+          <div class="chart-caption">R multiple by trade — each trade's result as a multiple of what you risked</div>
+          <canvas id="twc-r-chart" height="90"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW TRADE -->
+    <div class="view" id="view-new-trade">
+
+      <div class="panel">
+        <div class="panel-eyebrow">Step 1</div>
+        <div class="section-label">Read Off Your Chart</div>
+
+        <div class="subsection-label">Trade Details</div>
+        <div class="form-row cols-2">
+          <div class="field">
+            <label>Entry Date</label>
+            <input type="date" id="f-entryDate">
+          </div>
+          <div class="field">
+            <label>Entry Time</label>
+            <input type="time" id="f-entryTime">
+          </div>
+        </div>
+        <div class="form-row cols-2">
+          <div class="field">
+            <label>Instrument</label>
+            <input type="text" id="f-instrument" placeholder="e.g. AAPL" style="font-family:'Inter',sans-serif;">
+          </div>
+          <div class="field">
+            <label>Direction</label>
+            <div class="seg" id="f-direction-seg">
+              <button type="button" class="active long" data-val="Long">Long</button>
+              <button type="button" data-val="Short">Short</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection-label">Price Levels</div>
+        <div class="form-row cols-1">
+          <div class="field">
+            <label>Entry Price</label>
+            <div class="unit-field"><input type="number" step="any" id="f-entryPrice" placeholder="0.00"><span class="unit-suffix">USD</span></div>
+          </div>
+        </div>
+        <div class="form-row cols-3">
+          <div class="field">
+            <label>Intersection</label>
+            <div class="unit-field"><input type="number" step="any" id="f-intersection" placeholder="0.00"><span class="unit-suffix">USD</span></div>
+          </div>
+          <div class="field">
+            <label>ATR</label>
+            <div class="unit-field"><input type="number" step="any" id="f-atr" placeholder="0.00"><span class="unit-suffix">USD</span></div>
+          </div>
+          <div class="field">
+            <label>Stop Loss</label>
+            <div class="unit-field"><div class="readout-inline mono" id="f-stopLossDisplay">—</div><span class="unit-suffix">USD</span></div>
+          </div>
+        </div>
+        <div class="form-row cols-1">
+          <div class="field">
+            <label>Risk Per Share</label>
+            <div class="unit-field"><div class="readout-inline mono" id="f-riskPerShareDisplay">—</div><span class="unit-suffix">USD</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-eyebrow">Step 2</div>
+        <div class="section-label">Risk &amp; Sizing Plan</div>
+
+        <div class="form-row cols-2">
+          <div class="field">
+            <label>Account Size</label>
+            <div class="unit-field"><input type="number" step="any" id="f-accountSize" placeholder="0.00"><span class="unit-suffix">USD</span></div>
+          </div>
+          <div class="field">
+            <label>Risk %</label>
+            <input type="number" step="any" id="f-riskPct" placeholder="1">
+          </div>
+        </div>
+        <div class="form-row cols-2">
+          <div class="field">
+            <label>Risk $</label>
+            <div class="unit-field"><div class="readout-inline mono" id="f-idealRiskDisplay">—</div><span class="unit-suffix">USD</span></div>
+          </div>
+          <div class="field">
+            <label>Ideal Size</label>
+            <div class="readout-inline mono" id="f-idealSizeDisplay">—</div>
+          </div>
+        </div>
+
+        <div class="subsection-label">Take Profit 1</div>
+        <div class="form-row cols-2">
+          <div class="field">
+            <label>TP1 Risk Ratio</label>
+            <input type="number" step="any" id="f-rrTp1" placeholder="1.5">
+          </div>
+          <div class="field">
+            <label>TP1 Ideal Qty %</label>
+            <input type="number" step="any" id="f-tp1Pct" placeholder="50">
+          </div>
+        </div>
+        <div class="form-row cols-2">
+          <div class="field">
+            <label>TP1 Calculated Price</label>
+            <div class="unit-field"><div class="readout-inline mono" id="f-tp1PriceDisplay">—</div><span class="unit-suffix">USD</span></div>
+          </div>
+          <div class="field">
+            <label>TP1 Ideal Qty</label>
+            <div class="readout-inline mono" id="f-tp1IdealQtyDisplay">—</div>
+          </div>
+        </div>
+
+        <div class="subsection-label">Take Profit 2</div>
+        <div class="form-row cols-2">
+          <div class="field">
+            <label>TP2 Risk Ratio</label>
+            <input type="number" step="any" id="f-rrTp2" placeholder="3">
+          </div>
+          <div class="field">
+            <label>TP2 Ideal Qty %</label>
+            <input type="number" step="any" id="f-tp2Pct" placeholder="50">
+          </div>
+        </div>
+        <div class="form-row cols-2">
+          <div class="field">
+            <label>TP2 Calculated Price</label>
+            <div class="unit-field"><div class="readout-inline mono" id="f-tp2PriceDisplay">—</div><span class="unit-suffix">USD</span></div>
+          </div>
+          <div class="field">
+            <label>TP2 Ideal Qty</label>
+            <div class="readout-inline mono" id="f-tp2IdealQtyDisplay">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-eyebrow">Step 3</div>
+        <div class="section-label">Order Ticket</div>
+        <div class="order-ticket-grid">
+          <div class="order-card oc-purpose-entry" id="oc-entry-card">
+            <div class="oc-head">
+              <span class="oc-title">Entry</span>
+              <span class="oc-side" id="oc-entry-side">BUY</span>
+            </div>
+            <div class="oc-row">
+              <label>Qty</label>
+              <input type="number" step="any" id="f-actualEntryQty" placeholder="0">
+            </div>
+            <div class="oc-row">
+              <label>Price · LMT</label>
+              <div class="unit-field"><input type="number" step="any" id="f-actualEntryPrice" placeholder="0.00"><span class="unit-suffix">USD</span></div>
+            </div>
+          </div>
+
+          <div class="order-card oc-purpose-loss" id="oc-sl-card">
+            <div class="oc-head">
+              <span class="oc-title">Stop Loss</span>
+              <span class="oc-side" id="oc-sl-side">SELL</span>
+            </div>
+            <div class="oc-row">
+              <label>Qty</label>
+              <div class="oc-value mono" id="oc-sl-qty">—</div>
+            </div>
+            <div class="oc-row">
+              <label>Price · STP</label>
+              <div class="unit-field"><input type="number" step="any" id="f-actualStopPrice" placeholder="0.00"><span class="unit-suffix">USD</span></div>
+            </div>
+          </div>
+
+          <div class="order-card oc-purpose-profit" id="oc-tp1-card">
+            <div class="oc-head">
+              <span class="oc-title">Take Profit 1</span>
+              <span class="oc-side" id="oc-tp1-side">SELL</span>
+            </div>
+            <div class="oc-row">
+              <label>Qty</label>
+              <input type="number" step="any" id="f-actualTp1Qty" placeholder="0">
+            </div>
+            <div class="oc-row">
+              <label>Price · LMT</label>
+              <div class="unit-field"><input type="number" step="any" id="f-actualTp1Price" placeholder="0.00"><span class="unit-suffix">USD</span></div>
+            </div>
+          </div>
+
+          <div class="order-card oc-purpose-profit" id="oc-tp2-card">
+            <div class="oc-head">
+              <span class="oc-title">Take Profit 2</span>
+              <span class="oc-side" id="oc-tp2-side">SELL</span>
+            </div>
+            <div class="oc-row">
+              <label>Qty</label>
+              <input type="number" step="any" id="f-actualTp2Qty" placeholder="0">
+            </div>
+            <div class="oc-row">
+              <label>Price · LMT</label>
+              <div class="unit-field"><input type="number" step="any" id="f-actualTp2Price" placeholder="0.00"><span class="unit-suffix">USD</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="oc-footnote">Actual risk on this position: <span id="oc-actual-risk" class="mono">—</span></div>
+      </div>
+
+      <div class="panel">
+        <div class="form-grid">
+          <div class="field span-4">
+            <label>Notes</label>
+            <textarea id="f-notes" placeholder="Setup, context, screenshots link, mindset..."></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-ghost" id="f-cancel-edit" style="display:none;">Cancel edit</button>
+          <button class="btn btn-primary" id="f-submit">Log trade</button>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- TRADE LOG -->
+    <div class="view" id="view-log">
+      <div class="panel" style="padding:0; overflow:hidden;">
+        <div id="twc-log-table"></div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="twc-toast"></div>
+
+  <div class="confirm-overlay" id="twc-confirm-overlay">
+    <div class="confirm-box">
+      <p id="twc-confirm-message">Are you sure?</p>
+      <div class="confirm-actions">
+        <button class="btn btn-ghost" id="twc-confirm-cancel">Cancel</button>
+        <button class="btn btn-danger" id="twc-confirm-ok">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  const STORAGE_KEY = "riskline_trades_v1";
+  let trades = [];
+  let editingId = null;
+  let equityChart = null, rChart = null;
+
+  const $ = (sel, root) => (root||document).querySelector(sel);
+  const $$ = (sel, root) => Array.from((root||document).querySelectorAll(sel));
+  const root = $("#twc-root");
+
+  const fmtMoney = (n) => {
+    if (n === null || n === undefined || isNaN(n)) return "—";
+    const sign = n < 0 ? "-" : "";
+    return sign + "$" + Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2});
+  };
+  const fmtNum = (n, d=2) => (n === null || n === undefined || isNaN(n)) ? "—" : Number(n).toLocaleString(undefined,{minimumFractionDigits:d, maximumFractionDigits:d});
+  const fmtPct = (n) => (n === null || n === undefined || isNaN(n)) ? "—" : (n*100).toFixed(1) + "%";
+  const fmtR = (n) => (n === null || n === undefined || isNaN(n)) ? "—" : (n>=0?"+":"") + n.toFixed(2) + "R";
+
+  function showToast(msg){
+    const t = $("#twc-toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._timer);
+    t._timer = setTimeout(()=>t.classList.remove("show"), 2200);
+  }
+
+  // Custom confirm dialog — sandboxed artifacts block the native window.confirm(), so this
+  // renders an in-app modal instead and resolves true/false based on the button pressed.
+  function showConfirm(message){
+    return new Promise((resolve)=>{
+      const overlay = $("#twc-confirm-overlay", root);
+      $("#twc-confirm-message", root).textContent = message;
+      overlay.classList.add("show");
+
+      const cleanup = (result) => {
+        overlay.classList.remove("show");
+        okBtn.removeEventListener("click", onOk);
+        cancelBtn.removeEventListener("click", onCancel);
+        overlay.removeEventListener("click", onOverlay);
+        resolve(result);
+      };
+      const okBtn = $("#twc-confirm-ok", root);
+      const cancelBtn = $("#twc-confirm-cancel", root);
+      const onOk = () => cleanup(true);
+      const onCancel = () => cleanup(false);
+      const onOverlay = (e) => { if(e.target === overlay) cleanup(false); };
+
+      okBtn.addEventListener("click", onOk);
+      cancelBtn.addEventListener("click", onCancel);
+      overlay.addEventListener("click", onOverlay);
+    });
+  }
+
+  // ---------------- Storage ----------------
+  // Uses Claude.ai's window.storage when available (inside claude.ai), and falls back to the
+  // browser's own localStorage automatically — so the exact same file works whether it's
+  // opened as a Claude artifact or hosted/opened as a plain HTML file anywhere else.
+  const hasClaudeStorage = (typeof window !== "undefined" && !!window.storage);
+  async function loadTrades(){
+    try{
+      if(hasClaudeStorage){
+        const res = await window.storage.get(STORAGE_KEY, false);
+        trades = res && res.value ? JSON.parse(res.value) : [];
+      } else {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        trades = raw ? JSON.parse(raw) : [];
+      }
+    }catch(e){
+      trades = [];
+    }
+  }
+  async function saveTrades(){
+    try{
+      if(hasClaudeStorage){
+        const res = await window.storage.set(STORAGE_KEY, JSON.stringify(trades), false);
+        if(!res){ showToast("Couldn't save — try again"); }
+      } else {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
+      }
+    }catch(e){
+      showToast("Storage error — changes may not persist");
+    }
+  }
+
+  // ---------------- Derived calculations (mirrors the spreadsheet logic) ----------------
+  // "Ideal" values = your plan, purely calculated from chart reads + risk%.
+  // "Actual" values = what you key into IBKR — default to the ideal plan, editable.
+  function deriveTrade(t){
+    const dir = t.direction === "Short" ? -1 : 1;
+
+    // --- Ideal plan (Step 1 + Step 2) ---
+    const stopLoss = (t.intersection!=null && t.atr!=null)
+      ? (dir===1 ? t.intersection - t.atr : t.intersection + t.atr)
+      : null;
+    const riskPerShare = (t.entryPrice!=null && stopLoss!=null) ? Math.abs(t.entryPrice - stopLoss) : null;
+    const idealRisk = (t.accountSize!=null && t.riskPct!=null) ? t.accountSize * (t.riskPct/100) : null;
+    const idealSize = (idealRisk!=null && riskPerShare) ? Math.floor(idealRisk/riskPerShare) : null;
+
+    const tp1PriceIdeal = (t.entryPrice!=null && riskPerShare!=null && t.rrTp1!=null)
+      ? t.entryPrice + dir * t.rrTp1 * riskPerShare : null;
+    const tp2PriceIdeal = (t.entryPrice!=null && riskPerShare!=null && t.rrTp2!=null)
+      ? t.entryPrice + dir * t.rrTp2 * riskPerShare : null;
+
+    const tp1Pct = (t.tp1Pct!=null ? t.tp1Pct : 50) / 100;
+    const tp1IdealQty = idealSize!=null ? Math.floor(idealSize*tp1Pct) : null;
+    const tp2IdealQty = idealSize!=null ? idealSize - tp1IdealQty : null;
+
+    // --- Order ticket / actual (Step 3) — falls back to the ideal plan until edited ---
+    const actualEntryQty = t.actualEntryQty!=null ? t.actualEntryQty : idealSize;
+    const actualEntryPrice = t.actualEntryPrice!=null ? t.actualEntryPrice : t.entryPrice;
+    const actualStopPrice = t.actualStopPrice!=null ? t.actualStopPrice : stopLoss;
+    const actualTp1Qty = t.actualTp1Qty!=null ? t.actualTp1Qty : tp1IdealQty;
+    const actualTp1Price = t.actualTp1Price!=null ? t.actualTp1Price : tp1PriceIdeal;
+    // TP2's default is "whatever's left of your ACTUAL position after your ACTUAL TP1 qty" —
+    // not the ideal-size-based TP2 qty — so TP1 + TP2 always sums to what you really took,
+    // even when your actual size differs from the calculated ideal size.
+    const actualTp2Qty = t.actualTp2Qty!=null
+      ? t.actualTp2Qty
+      : (actualEntryQty!=null && actualTp1Qty!=null ? Math.max(0, actualEntryQty - actualTp1Qty) : tp2IdealQty);
+    const actualTp2Price = t.actualTp2Price!=null ? t.actualTp2Price : tp2PriceIdeal;
+
+    const actualRisk = (actualEntryQty!=null && actualEntryPrice!=null && actualStopPrice!=null)
+      ? actualEntryQty * Math.abs(actualEntryPrice - actualStopPrice) : null;
+
+    const tp1Hit = t.tp1Result === "Hit";
+    // TP2's fate is now folded into "Remainder" — no separate TP2 Result field.
+    // qtyForSL = whatever's currently resting on the stop order: full size, minus TP1 if it
+    // sold, minus TP2 if Remainder says TP2 also hit.
+    const qtyForSL = actualEntryQty!=null
+      ? actualEntryQty - (tp1Hit?(actualTp1Qty||0):0) - (t.finalOutcome==="TP2 Hit"?(actualTp2Qty||0):0)
+      : null;
+
+    const tp1PnL = (tp1Hit && actualTp1Qty!=null && actualTp1Price!=null && actualEntryPrice!=null)
+      ? actualTp1Qty * (actualTp1Price - actualEntryPrice) * dir : 0;
+
+    // Remainder ("what happened to everything after TP1") has exactly one of four states.
+    // TP2 Hit uses the TP2 order's own qty/price. Hit SL / Manually Closed use whatever's
+    // left after TP1 (qtyForSL reduces to just that in those branches, since TP2 didn't fire).
+    let remainderPnL = 0;
+    if(t.finalOutcome === "TP2 Hit" && actualTp2Qty!=null && actualTp2Price!=null && actualEntryPrice!=null){
+      remainderPnL = actualTp2Qty * (actualTp2Price - actualEntryPrice) * dir;
+    } else if(t.finalOutcome === "Hit SL" && qtyForSL!=null && actualStopPrice!=null && actualEntryPrice!=null){
+      remainderPnL = qtyForSL * (actualStopPrice - actualEntryPrice) * dir;
+    } else if(t.finalOutcome === "Manually Closed" && qtyForSL!=null && t.manualClosePrice!=null && actualEntryPrice!=null){
+      remainderPnL = qtyForSL * (t.manualClosePrice - actualEntryPrice) * dir;
+    }
+
+    const totalPnL = (tp1PnL||0) + (remainderPnL||0);
+    const rMultiple = (actualRisk && actualRisk>0) ? totalPnL/actualRisk : null;
+    const pctReturn = (t.accountSize && t.accountSize>0) ? totalPnL/t.accountSize : null;
+
+    const hasAnyResult = ["TP2 Hit","Hit SL","Manually Closed"].includes(t.finalOutcome) || tp1Hit;
+    let status = "Open";
+    if (hasAnyResult){
+      if (totalPnL > 0) status = "Win";
+      else if (totalPnL < 0) status = "Loss";
+      else status = "Breakeven";
+    }
+
+    return { stopLoss, riskPerShare, idealRisk, idealSize, tp1PriceIdeal, tp2PriceIdeal, tp1IdealQty, tp2IdealQty,
+      actualEntryQty, actualEntryPrice, actualStopPrice, actualTp1Qty, actualTp1Price, actualTp2Qty, actualTp2Price,
+      actualRisk, qtyForSL, tp1PnL, remainderPnL, totalPnL, rMultiple, pctReturn, status };
+  }
+
+  // ---------------- Tabs ----------------
+  function setView(name){
+    $$(".tab-btn", root).forEach(b => b.classList.toggle("active", b.dataset.view === name));
+    $$(".view", root).forEach(v => v.classList.toggle("active", v.id === "view-"+name));
+    if(name === "dashboard") renderDashboard();
+    if(name === "log") renderLog();
+  }
+  $("#twc-tabs", root).addEventListener("click", (e)=>{
+    const btn = e.target.closest(".tab-btn");
+    if(btn) setView(btn.dataset.view);
+  });
+
+  // ---------------- New Trade form ----------------
+  let direction = "Long";
+  $("#f-direction-seg", root).addEventListener("click", (e)=>{
+    const btn = e.target.closest("button");
+    if(!btn) return;
+    direction = btn.dataset.val;
+    $$("#f-direction-seg button", root).forEach(b=>{
+      b.classList.toggle("active", b.dataset.val === direction);
+      b.classList.toggle("long", b.dataset.val === "Long");
+      b.classList.toggle("short", b.dataset.val === "Short");
+    });
+    updatePreview();
+  });
+
+  const formIds = ["f-entryDate","f-entryTime","f-instrument","f-entryPrice","f-atr","f-intersection",
+    "f-accountSize","f-riskPct","f-rrTp1","f-rrTp2","f-tp1Pct","f-tp2Pct","f-notes"];
+  const step3Ids = ["f-actualEntryQty","f-actualEntryPrice","f-actualStopPrice",
+    "f-actualTp1Qty","f-actualTp1Price","f-actualTp2Qty","f-actualTp2Price"];
+
+  formIds.forEach(id => {
+    const el = $("#"+id, root);
+    if(el) el.addEventListener("input", updatePreview);
+  });
+
+  // TP1%/TP2% are linked — editing one adjusts the other so they always sum to 100
+  $("#f-tp1Pct", root).addEventListener("input", (e)=>{
+    const v = e.target.value === "" ? null : Math.max(0, Math.min(100, parseFloat(e.target.value)));
+    if(v!=null) $("#f-tp2Pct", root).value = (100 - v).toString();
+    updatePreview();
+  });
+  $("#f-tp2Pct", root).addEventListener("input", (e)=>{
+    const v = e.target.value === "" ? null : Math.max(0, Math.min(100, parseFloat(e.target.value)));
+    if(v!=null) $("#f-tp1Pct", root).value = (100 - v).toString();
+    updatePreview();
+  });
+
+  // Step 3 fields: once the user types into one, stop auto-filling it from the ideal plan
+  const touchedStep3 = new Set();
+  step3Ids.forEach(id => {
+    const el = $("#"+id, root);
+    if(el) el.addEventListener("input", ()=>{
+      touchedStep3.add(id);
+      updatePreview();
+    });
+  });
+
+  function readForm(){
+    const num = (id) => {
+      const v = $("#"+id, root).value;
+      return v === "" ? null : parseFloat(v);
+    };
+    return {
+      entryDate: $("#f-entryDate", root).value,
+      entryTime: $("#f-entryTime", root).value,
+      instrument: $("#f-instrument", root).value.trim(),
+      direction: direction,
+      entryPrice: num("f-entryPrice"),
+      atr: num("f-atr"),
+      intersection: num("f-intersection"),
+      accountSize: num("f-accountSize"),
+      riskPct: num("f-riskPct"),
+      rrTp1: num("f-rrTp1"),
+      rrTp2: num("f-rrTp2"),
+      tp1Pct: num("f-tp1Pct"),
+      tp2Pct: num("f-tp2Pct"),
+      actualEntryQty: num("f-actualEntryQty"),
+      actualEntryPrice: num("f-actualEntryPrice"),
+      actualStopPrice: num("f-actualStopPrice"),
+      actualTp1Qty: num("f-actualTp1Qty"),
+      actualTp1Price: num("f-actualTp1Price"),
+      actualTp2Qty: num("f-actualTp2Qty"),
+      actualTp2Price: num("f-actualTp2Price"),
+      notes: $("#f-notes", root).value,
+      finalOutcome: "",
+      tp1Result: ""
+    };
+  }
+
+  function updatePreview(){
+    const t = readForm();
+    const d = deriveTrade(t);
+
+    $("#f-stopLossDisplay", root).textContent = d.stopLoss!=null ? fmtNum(d.stopLoss) : "—";
+    $("#f-idealRiskDisplay", root).textContent = d.idealRisk!=null ? fmtNum(d.idealRisk) : "—";
+    $("#f-riskPerShareDisplay", root).textContent = d.riskPerShare!=null ? fmtNum(d.riskPerShare) : "—";
+    $("#f-idealSizeDisplay", root).textContent = d.idealSize!=null ? d.idealSize : "—";
+    $("#f-tp1IdealQtyDisplay", root).textContent = d.tp1IdealQty!=null ? d.tp1IdealQty : "—";
+    $("#f-tp2IdealQtyDisplay", root).textContent = d.tp2IdealQty!=null ? d.tp2IdealQty : "—";
+    $("#f-tp1PriceDisplay", root).textContent = d.tp1PriceIdeal!=null ? fmtNum(d.tp1PriceIdeal) : "—";
+    $("#f-tp2PriceDisplay", root).textContent = d.tp2PriceIdeal!=null ? fmtNum(d.tp2PriceIdeal) : "—";
+
+    // Auto-fill Step 3 order-ticket fields from the ideal plan, unless the user has edited them
+    const autofill = (id, val) => {
+      if(touchedStep3.has(id)) return;
+      const el = $("#"+id, root);
+      const newVal = (val==null) ? "" : String(val);
+      if(el.value !== newVal) el.value = newVal;
+    };
+    autofill("f-actualEntryQty", d.idealSize);
+    autofill("f-actualEntryPrice", t.entryPrice!=null ? t.entryPrice : null);
+    autofill("f-actualStopPrice", d.stopLoss!=null ? Number(d.stopLoss.toFixed(4)) : null);
+    autofill("f-actualTp1Qty", d.tp1IdealQty);
+    autofill("f-actualTp1Price", d.tp1PriceIdeal!=null ? Number(d.tp1PriceIdeal.toFixed(4)) : null);
+    autofill("f-actualTp2Qty", d.actualTp2Qty);
+    autofill("f-actualTp2Price", d.tp2PriceIdeal!=null ? Number(d.tp2PriceIdeal.toFixed(4)) : null);
+
+    // Re-derive after autofill so the order ticket reflects what's actually in the fields now
+    const t2 = readForm();
+    const d2 = deriveTrade(t2);
+
+    // Order ticket action labels — just BUY or SELL, no SHORT/COVER qualifier.
+    // Colour is static per card (entry=blue, stop=red, take-profit=green) and set in the HTML,
+    // so it always reflects risk vs. profit and never fights with the buy/sell text.
+    const isShort = t2.direction === "Short";
+    const entryLabel = isShort ? "SELL" : "BUY";
+    const exitLabel = isShort ? "BUY" : "SELL";
+    $("#oc-entry-side", root).textContent = entryLabel;
+    $("#oc-sl-side", root).textContent = exitLabel;
+    $("#oc-tp1-side", root).textContent = exitLabel;
+    $("#oc-tp2-side", root).textContent = exitLabel;
+
+    $("#oc-sl-qty", root).textContent = d2.qtyForSL ?? "—";
+    $("#oc-actual-risk", root).textContent = d2.actualRisk!=null ? fmtMoney(d2.actualRisk) + " USD" : "—";
+  }
+
+  // Returns Risk & Sizing Plan values from the most recently logged trade, so the form
+  // starts from what you actually used last time instead of arbitrary hardcoded defaults.
+  function getLastTradeDefaults(){
+    const fallback = { accountSize:null, riskPct:1, rrTp1:1.5, rrTp2:3, tp1Pct:50, tp2Pct:50 };
+    if(!trades.length) return fallback;
+    const last = trades[trades.length-1];
+    return {
+      accountSize: last.accountSize ?? fallback.accountSize,
+      riskPct: last.riskPct ?? fallback.riskPct,
+      rrTp1: last.rrTp1 ?? fallback.rrTp1,
+      rrTp2: last.rrTp2 ?? fallback.rrTp2,
+      tp1Pct: last.tp1Pct ?? fallback.tp1Pct,
+      tp2Pct: last.tp2Pct ?? fallback.tp2Pct,
+    };
+  }
+
+  function resetForm(){
+    formIds.forEach(id => { const el = $("#"+id, root); if(el) el.value = ""; });
+    step3Ids.forEach(id => { const el = $("#"+id, root); if(el) el.value = ""; });
+    touchedStep3.clear();
+    const d = getLastTradeDefaults();
+    $("#f-accountSize", root).value = d.accountSize!=null ? d.accountSize : "";
+    $("#f-riskPct", root).value = d.riskPct;
+    $("#f-rrTp1", root).value = d.rrTp1;
+    $("#f-rrTp2", root).value = d.rrTp2;
+    $("#f-tp1Pct", root).value = d.tp1Pct;
+    $("#f-tp2Pct", root).value = d.tp2Pct;
+    const now = new Date();
+    $("#f-entryDate", root).value = now.toISOString().slice(0,10);
+    $("#f-entryTime", root).value = now.toTimeString().slice(0,5);
+    direction = "Long";
+    $$("#f-direction-seg button", root).forEach(b=>{
+      b.classList.toggle("active", b.dataset.val === "Long");
+      b.classList.toggle("long", b.dataset.val === "Long");
+      b.classList.remove("short");
+    });
+    editingId = null;
+    $("#f-cancel-edit", root).style.display = "none";
+    $("#f-submit", root).textContent = "Log trade";
+    updatePreview();
+  }
+
+  $("#f-cancel-edit", root).addEventListener("click", resetForm);
+
+  $("#f-submit", root).addEventListener("click", async ()=>{
+    const t = readForm();
+    if(!t.instrument || t.entryPrice==null || t.intersection==null || t.atr==null || t.accountSize==null || t.actualEntryQty==null){
+      showToast("Fill in instrument, entry price, intersection, ATR, account size and entry qty");
+      return;
+    }
+    if(editingId){
+      const idx = trades.findIndex(x=>x.id===editingId);
+      if(idx>-1){
+        const preserved = { finalOutcome: trades[idx].finalOutcome, tp1Result: trades[idx].tp1Result, manualClosePrice: trades[idx].manualClosePrice };
+        trades[idx] = Object.assign({}, t, preserved, { id: editingId, createdAt: trades[idx].createdAt });
+      }
+      showToast("Trade updated");
+    } else {
+      t.id = "t_" + Date.now() + "_" + Math.random().toString(36).slice(2,7);
+      t.createdAt = Date.now();
+      t.finalOutcome = "Still Open"; // a freshly logged trade is, by definition, still open
+      trades.push(t);
+      showToast("Trade logged");
+    }
+    await saveTrades();
+    resetForm();
+    setView("log");
+  });
+
+  // ---------------- Trade Log ----------------
+  // The Trade Log shows one "Outcome" dropdown instead of separate TP1/Remainder fields —
+  // each option is a complete, self-consistent story (so there's no invalid combination to
+  // guard against), and internally it still just sets tp1Result + finalOutcome together.
+  // Grouped as "Full Position" (closed in one shot) vs "Partial Exit" (some already sold at
+  // a target, resolving the rest) to aid scanning while open — but every label is also
+  // self-contained on its own, since a <select> only ever displays the chosen option's own
+  // text once collapsed, never its optgroup header.
+  // "TP2 Hit" only appears when TP2 is actually sized (tp2Pct > 0). And when there's no TP2
+  // planned AND the fill covers the whole position, there's only ever been one target — so
+  // it's shown as plain "Hit Target" in Full Position, with no need to say "TP1" at all.
+  const OUTCOME_OPTIONS = [
+    { value: "",            label: "—",                          tp1Result: "",     finalOutcome: "",                group: null },
+    { value: "sl_full",     label: "Hit SL",                     tp1Result: "",     finalOutcome: "Hit SL",              group: "full" },
+    { value: "manual_full", label: "Manually Closed",            tp1Result: "",     finalOutcome: "Manually Closed",     group: "full" },
+    { value: "target_full", label: "Hit Target",                 tp1Result: "Hit",  finalOutcome: "Hit SL",              group: "full", onlySingleNoRemainder: true },
+    { value: "tp1_full",    label: "TP1 Hit (Full Close)",       tp1Result: "Hit",  finalOutcome: "Hit SL",              group: "tp1",  onlyMultiNoRemainder: true },
+    { value: "tp1_open",    label: "TP1 Hit, Rest Open",         tp1Result: "Hit",  finalOutcome: "Still Open",          group: "tp1",  onlyWhenRemainder: true },
+    { value: "tp1_tp2",     label: "TP1 Hit, TP2 Hit",           tp1Result: "Hit",  finalOutcome: "TP2 Hit",             group: "tp1",  requiresTp2: true },
+    { value: "tp1_sl",      label: "TP1 Hit, Rest Hit SL",       tp1Result: "Hit",  finalOutcome: "Hit SL",              group: "tp1",  onlyWhenRemainder: true },
+    { value: "tp1_manual",  label: "TP1 Hit, Rest Manual Close", tp1Result: "Hit",  finalOutcome: "Manually Closed",     group: "tp1",  onlyWhenRemainder: true },
+  ];
+  // Whether marking TP1 as Hit would leave any shares over, based on actual quantities —
+  // independent of whatever Outcome is currently stored, so this stays correct no matter
+  // which option is selected right now.
+  function hasRemainderAfterTp1(t){
+    const hypothetical = Object.assign({}, t, { tp1Result: "Hit", finalOutcome: "" });
+    return deriveTrade(hypothetical).qtyForSL > 0;
+  }
+  function tradeToOutcomeValue(t){
+    const tp1Hit = t.tp1Result === "Hit";
+    const fo = t.finalOutcome;
+    if(!tp1Hit) return fo === "Hit SL" ? "sl_full" : fo === "Manually Closed" ? "manual_full" : "";
+    if(fo === "TP2 Hit") return "tp1_tp2";
+    if(fo === "Manually Closed") return "tp1_manual";
+    if(fo === "Hit SL"){
+      // Only disambiguate into "Hit Target" / "TP1 Hit (Full Close)" when Hit SL was actually
+      // the stored outcome — the remainder-quantity check should never invent a selection that
+      // was never actually made, or the dropdown can show a state that was never really saved.
+      if(!hasRemainderAfterTp1(t)){
+        const isSingleTarget = t.tp2Pct == null || t.tp2Pct === 0;
+        return isSingleTarget ? "target_full" : "tp1_full";
+      }
+      return "tp1_sl";
+    }
+    if(fo === "Still Open") return "tp1_open";
+    return ""; // TP1 marked Hit, but nothing recorded yet for what happened to the rest
+  }
+  function outcomeOptionsHtml(t){
+    const current = tradeToOutcomeValue(t);
+    const hasTp2 = t.tp2Pct != null && t.tp2Pct > 0;
+    const hasRemainder = hasRemainderAfterTp1(t);
+    const isSingleTarget = t.tp2Pct == null || t.tp2Pct === 0;
+    // Always keep whatever's currently stored selectable, even if it wouldn't otherwise
+    // qualify (e.g. legacy data with TP2 Hit on a trade later edited to have no TP2 sizing).
+    const visible = OUTCOME_OPTIONS.filter(o =>
+      (!o.requiresTp2 || (hasTp2 && hasRemainder) || o.value === current) &&
+      (!o.onlyWhenRemainder || hasRemainder || o.value === current) &&
+      (!o.onlySingleNoRemainder || (isSingleTarget && !hasRemainder) || o.value === current) &&
+      (!o.onlyMultiNoRemainder || (!isSingleTarget && !hasRemainder) || o.value === current)
+    );
+    const opt = (o) => `<option value="${o.value}" ${o.value===current?"selected":""}>${o.label}</option>`;
+    const blank = visible.filter(o => o.group === null).map(opt).join("");
+    const full = visible.filter(o => o.group === "full").map(opt).join("");
+    const tp1 = visible.filter(o => o.group === "tp1").map(opt).join("");
+    return `${blank}
+      <optgroup label="Full Position">${full}</optgroup>
+      <optgroup label="Partial Exit">${tp1}</optgroup>`;
+  }
+
+  function renderLog(){
+    const wrap = $("#twc-log-table", root);
+    if(trades.length === 0){
+      wrap.innerHTML = `
+        <div class="empty-state">
+          <h3>No trades logged yet</h3>
+          <p>Log your first swing trade to start building your track record.</p>
+          <button class="btn btn-primary" id="log-empty-cta">Log a trade</button>
+        </div>`;
+      $("#log-empty-cta", wrap).addEventListener("click", ()=>setView("new-trade"));
+      return;
+    }
+    const sorted = [...trades].sort((a,b)=> (b.entryDate||"").localeCompare(a.entryDate||"") || b.createdAt-a.createdAt);
+    const rows = sorted.map(t=>{
+      const d = deriveTrade(t);
+      const statusBadge = {
+        Win: `<span class="badge win">Win</span>`,
+        Loss: `<span class="badge loss">Loss</span>`,
+        Breakeven: `<span class="badge be">BE</span>`,
+        Open: `<span class="badge open">Open</span>`
+      }[d.status];
+
+      return `
+        <tr data-id="${t.id}">
+          <td>${t.entryDate||"—"}</td>
+          <td style="font-weight:600;">${t.instrument||"—"}</td>
+          <td><span class="badge ${t.direction==="Long"?"long":"short"}">${t.direction}</span></td>
+          <td class="num">${d.actualEntryPrice!=null?fmtNum(d.actualEntryPrice):"—"}</td>
+          <td class="num">${d.actualEntryQty ?? "—"}</td>
+          <td class="num">${fmtMoney(d.actualRisk)}</td>
+          <td>
+            <select class="row-select-outcome" data-id="${t.id}" title="What happened to this trade">
+              ${outcomeOptionsHtml(t)}
+            </select>
+          </td>
+          <td>
+            <input type="number" step="any" class="row-input" data-field="manualClosePrice" data-id="${t.id}"
+              value="${t.manualClosePrice ?? ""}" placeholder="—" title="Exit price — only used when Outcome involves a Manual Close">
+          </td>
+          <td class="num" style="color:${d.totalPnL>0?'var(--green)':d.totalPnL<0?'var(--red)':'var(--muted)'}; font-weight:600;">${d.totalPnL?fmtMoney(d.totalPnL):(d.status==='Open'?'—':fmtMoney(0))}</td>
+          <td class="num">${d.rMultiple!=null?fmtR(d.rMultiple):"—"}</td>
+          <td>${statusBadge}</td>
+          <td>
+            <button class="icon-only" data-action="edit" data-id="${t.id}" title="Edit">✎</button>
+            <button class="icon-only" data-action="delete" data-id="${t.id}" title="Delete">✕</button>
+          </td>
+        </tr>`;
+    }).join("");
+
+    wrap.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th><th>Instrument</th><th>Dir</th><th>Entry</th><th>Size</th>
+              <th>Risk</th>
+              <th title="What happened to this trade, in one choice">Outcome</th>
+              <th title="Exit price, used only when Outcome involves a Manual Close">Manual $</th>
+              <th>P&amp;L</th><th title="R multiple — P&amp;L divided by actual risk. +2R means the trade made twice what you risked.">R</th><th>Status</th><th></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+
+    $$(".row-select-outcome", wrap).forEach(sel=>{
+      sel.addEventListener("change", async (e)=>{
+        const id = e.target.dataset.id;
+        const t = trades.find(x=>x.id===id);
+        const opt = OUTCOME_OPTIONS.find(o=>o.value===e.target.value);
+        if(t && opt){
+          t.tp1Result = opt.tp1Result;
+          t.finalOutcome = opt.finalOutcome;
+          await saveTrades();
+          renderLog();
+        }
+      });
+    });
+    $$(".row-input", wrap).forEach(inp=>{
+      inp.addEventListener("change", async (e)=>{
+        const id = e.target.dataset.id, field = e.target.dataset.field;
+        const t = trades.find(x=>x.id===id);
+        if(t){ t[field] = e.target.value === "" ? null : parseFloat(e.target.value); await saveTrades(); renderLog(); }
+      });
+    });
+    $$("[data-action='delete']", wrap).forEach(btn=>{
+      btn.addEventListener("click", async (e)=>{
+        const id = e.currentTarget.dataset.id;
+        if(await showConfirm("Delete this trade? This can't be undone.")){
+          trades = trades.filter(x=>x.id!==id);
+          await saveTrades();
+          renderLog();
+          showToast("Trade deleted");
+        }
+      });
+    });
+    $$("[data-action='edit']", wrap).forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        const id = e.currentTarget.dataset.id;
+        const t = trades.find(x=>x.id===id);
+        if(!t) return;
+        editingId = id;
+        $("#f-entryDate", root).value = t.entryDate||"";
+        $("#f-entryTime", root).value = t.entryTime||"";
+        $("#f-instrument", root).value = t.instrument||"";
+        direction = t.direction||"Long";
+        $$("#f-direction-seg button", root).forEach(b=>{
+          b.classList.toggle("active", b.dataset.val === direction);
+          b.classList.toggle("long", b.dataset.val === "Long" && direction==="Long");
+          b.classList.toggle("short", b.dataset.val === "Short" && direction==="Short");
+        });
+        $("#f-entryPrice", root).value = t.entryPrice ?? "";
+        $("#f-atr", root).value = t.atr ?? "";
+        $("#f-intersection", root).value = t.intersection ?? "";
+        $("#f-accountSize", root).value = t.accountSize ?? "";
+        $("#f-riskPct", root).value = t.riskPct ?? "";
+        $("#f-rrTp1", root).value = t.rrTp1 ?? "";
+        $("#f-rrTp2", root).value = t.rrTp2 ?? "";
+        $("#f-tp1Pct", root).value = t.tp1Pct ?? "50";
+        $("#f-tp2Pct", root).value = t.tp2Pct ?? "50";
+        $("#f-notes", root).value = t.notes || "";
+
+        // Load the saved order-ticket values and mark them touched so autofill won't overwrite them
+        touchedStep3.clear();
+        const loadStep3 = (id, val) => { $("#"+id, root).value = (val==null?"":val); touchedStep3.add(id); };
+        loadStep3("f-actualEntryQty", t.actualEntryQty);
+        loadStep3("f-actualEntryPrice", t.actualEntryPrice);
+        loadStep3("f-actualStopPrice", t.actualStopPrice);
+        loadStep3("f-actualTp1Qty", t.actualTp1Qty);
+        loadStep3("f-actualTp1Price", t.actualTp1Price);
+        loadStep3("f-actualTp2Qty", t.actualTp2Qty);
+        loadStep3("f-actualTp2Price", t.actualTp2Price);
+
+        $("#f-cancel-edit", root).style.display = "inline-flex";
+        $("#f-submit", root).textContent = "Save changes";
+        updatePreview();
+        setView("new-trade");
+      });
+    });
+  }
+
+  // ---------------- Dashboard ----------------
+  // A trade still needs attention if its non-TP1 portion hasn't resolved to a terminal
+  // state yet — covers both "never even hit TP1" and "TP1 hit, rest still riding."
+  function isTradeOpen(t){
+    return !["Hit SL","Manually Closed","TP2 Hit"].includes(t.finalOutcome);
+  }
+  function daysHeldFor(t){
+    if(!t.entryDate) return null;
+    const entry = new Date(t.entryDate + "T00:00:00");
+    if(isNaN(entry.getTime())) return null;
+    return Math.floor((new Date() - entry) / 86400000);
+  }
+
+  function renderReviewPanel(){
+    const openWithAge = trades
+      .filter(isTradeOpen)
+      .map(t => ({ t, days: daysHeldFor(t) }))
+      .filter(x => x.days != null && x.days >= 10)
+      .sort((a,b) => b.days - a.days);
+
+    const panel = $("#twc-review-panel", root);
+    const badge = $("#twc-log-badge", root);
+    const urgentCount = openWithAge.filter(x => x.days >= 14).length;
+
+    if(openWithAge.length === 0){
+      panel.style.display = "none";
+      badge.style.display = "none";
+      return;
+    }
+    panel.style.display = "block";
+    panel.classList.toggle("urgent", urgentCount > 0);
+    if(urgentCount > 0){
+      badge.style.display = "inline-flex";
+      badge.textContent = urgentCount;
+    } else {
+      badge.style.display = "none";
+    }
+
+    $("#twc-review-list", root).innerHTML = openWithAge.map(({t, days}) => {
+      const urgent = days >= 14;
+      return `
+        <div class="review-row">
+          <div class="review-row-left">
+            <span class="badge ${t.direction==="Long"?"long":"short"}">${t.direction}</span>
+            <span class="review-instrument">${t.instrument||"—"}</span>
+            <span style="color:var(--muted-dim); font-size:12px;">opened ${t.entryDate||"—"}</span>
+          </div>
+          <span class="review-days ${urgent?"urgent":"warn"}">${days} day${days===1?"":"s"} held</span>
+        </div>`;
+    }).join("");
+  }
+
+  function computeStats(){
+    const derived = trades.map(t=>({t, d: deriveTrade(t)}));
+    const wins = derived.filter(x=>x.d.status==="Win");
+    const losses = derived.filter(x=>x.d.status==="Loss");
+    const resolvedR = derived.filter(x=>x.d.status!=="Open" && x.d.rMultiple!=null).map(x=>x.d.rMultiple);
+    const totalPnL = derived.reduce((s,x)=>s + (x.d.totalPnL||0), 0);
+    const totalRisk = derived.reduce((s,x)=> s + (x.d.actualRisk||0), 0);
+    const grossWin = wins.reduce((s,x)=>s+x.d.totalPnL,0);
+    const grossLoss = Math.abs(losses.reduce((s,x)=>s+x.d.totalPnL,0));
+    const winRate = (wins.length+losses.length)>0 ? wins.length/(wins.length+losses.length) : null;
+    const avgR = resolvedR.length ? resolvedR.reduce((a,b)=>a+b,0)/resolvedR.length : null;
+    const profitFactor = grossLoss>0 ? grossWin/grossLoss : (grossWin>0?Infinity:null);
+    const pnls = derived.map(x=>x.d.totalPnL);
+    const best = pnls.length ? Math.max(...pnls) : null;
+    const worst = pnls.length ? Math.min(...pnls) : null;
+    return { total: trades.length, wins: wins.length, losses: losses.length,
+      winRate, totalPnL, totalRisk, avgR, profitFactor, best, worst };
+  }
+
+  // Primary = the handful of numbers a beginner actually needs to answer "am I doing OK?"
+  // Everything else (R-multiple, profit factor, best/worst, per-trade tape) is real and
+  // useful, but assumes concepts worth growing into rather than needing on day one — so it's
+  // tucked behind "Show advanced stats" instead of competing for attention up front.
+  const USER_NAME = "Dion";
+  function renderGreeting(){
+    const hour = new Date().getHours();
+    const part = hour < 5 ? "Good evening" : hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+    $("#twc-greeting", root).textContent = `${part}, ${USER_NAME}`;
+  }
+  let showAdvanced = false;
+  function renderDashboard(){
+    renderGreeting();
+    const s = computeStats();
+    renderReviewPanel();
+
+    const primaryCards = [
+      ["Total P&L (USD)", fmtMoney(s.totalPnL), s.totalPnL>0?"pos":s.totalPnL<0?"neg":""],
+      ["Win rate", fmtPct(s.winRate), null],
+      ["Total trades", s.total, null],
+    ];
+    $("#twc-stats-primary", root).innerHTML = primaryCards.map(([label,val,cls])=>`
+      <div class="stat-card">
+        <div class="stat-label">${label}</div>
+        <div class="stat-value ${cls||''}">${val}</div>
+      </div>`).join("");
+
+    const advancedCards = [
+      ["Avg R multiple", s.avgR!=null?fmtR(s.avgR):"—", s.avgR>0?"pos":s.avgR<0?"neg":""],
+      ["Profit factor", s.profitFactor==Infinity?"∞":(s.profitFactor!=null?s.profitFactor.toFixed(2):"—"), null],
+      ["Best / worst trade (USD)", (s.best!=null?fmtMoney(s.best):"—") + " / " + (s.worst!=null?fmtMoney(s.worst):"—"), null],
+    ];
+    $("#twc-stats-advanced", root).innerHTML = advancedCards.map(([label,val,cls])=>`
+      <div class="stat-card">
+        <div class="stat-label">${label}</div>
+        <div class="stat-value ${cls||''}">${val}</div>
+      </div>`).join("");
+
+    renderPulse();
+    renderCharts();
+  }
+
+  $("#twc-advanced-toggle", root).addEventListener("click", ()=>{
+    showAdvanced = !showAdvanced;
+    $("#twc-advanced-section", root).style.display = showAdvanced ? "block" : "none";
+    $("#twc-advanced-toggle", root).textContent = showAdvanced ? "Hide advanced stats ▴" : "Show advanced stats ▾";
+  });
+
+  function renderPulse(){
+    const wrap = $("#twc-pulse", root);
+    if(trades.length===0){
+      wrap.innerHTML = `<div class="pulse-empty">No trades yet — your tape will fill in as you log trades.</div>`;
+      return;
+    }
+    const sorted = [...trades].sort((a,b)=> (a.entryDate||"").localeCompare(b.entryDate||"") || a.createdAt-b.createdAt);
+    const derived = sorted.map(t=>deriveTrade(t));
+    const maxR = Math.max(1, ...derived.map(d=>Math.abs(d.rMultiple||0)));
+    wrap.innerHTML = derived.map(d=>{
+      const h = Math.max(4, Math.round((Math.abs(d.rMultiple||0.15)/maxR) * 60));
+      const color = d.status==="Win" ? "var(--green)" : d.status==="Loss" ? "var(--red)" : d.status==="Breakeven" ? "var(--accent)" : "var(--amber)";
+      const label = d.rMultiple!=null ? fmtR(d.rMultiple) : d.status;
+      return `<div class="pulse-bar" style="height:${h}px; background:${color};" title="${label}"></div>`;
+    }).join("");
+  }
+
+  function formatDateShort(dateStr){
+    if(!dateStr) return "—";
+    const d = new Date(dateStr + "T00:00:00");
+    if(isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+
+  function renderCharts(){
+    const sorted = [...trades].sort((a,b)=> (a.entryDate||"").localeCompare(b.entryDate||"") || a.createdAt-b.createdAt);
+    const derived = sorted.map(t=>deriveTrade(t));
+    let cum = 0;
+    const equitySeries = derived.map(d=>{ cum += (d.totalPnL||0); return cum; });
+    // X-axis is entry date, not trade sequence or instrument — an equity curve's whole job is
+    // showing growth over real time, so it should reflect actual calendar spacing between
+    // trades (gaps and clusters both matter), not evenly-spaced ticks that hide them.
+    const dateLabels = sorted.map(t => formatDateShort(t.entryDate));
+    const instruments = sorted.map(t => t.instrument || "—");
+    const rSeries = derived.map(d=> d.rMultiple!=null ? Number(d.rMultiple.toFixed(2)) : 0);
+    const rColors = derived.map(d=> d.status==="Win" ? "#7FC663" : d.status==="Loss" ? "#F4506B" : "#6B6656");
+
+    const gridColor = "rgba(255,255,255,0.05)";
+    const tickColor = "#A79F8C";
+    const lineColor = "#F0629B";
+    const lineFill = "rgba(240,98,155,0.12)";
+
+    if(equityChart) equityChart.destroy();
+    if(rChart) rChart.destroy();
+
+    const ctx1 = $("#twc-equity-chart", root).getContext("2d");
+    equityChart = new Chart(ctx1, {
+      type: "line",
+      data: {
+        labels: dateLabels,
+        datasets: [{
+          data: equitySeries,
+          borderColor: lineColor,
+          backgroundColor: lineFill,
+          fill: true,
+          tension: 0.25,
+          pointRadius: 2,
+          pointBackgroundColor: lineColor,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display:false },
+          tooltip: {
+            callbacks: {
+              title: (items) => items[0] ? dateLabels[items[0].dataIndex] : "",
+              label: (item) => `${instruments[item.dataIndex]}: ${fmtMoney(item.raw)} cumulative`
+            }
+          }
+        },
+        scales: {
+          x: { grid:{ color: gridColor }, ticks:{ color: tickColor, maxRotation:0, autoSkip:true, font:{size:10} } },
+          y: { grid:{ color: gridColor }, ticks:{ color: tickColor, font:{size:10} } }
+        }
+      }
+    });
+
+    const ctx2 = $("#twc-r-chart", root).getContext("2d");
+    rChart = new Chart(ctx2, {
+      type: "bar",
+      data: {
+        labels: dateLabels,
+        datasets: [{ data: rSeries, backgroundColor: rColors, borderRadius: 3 }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display:false },
+          tooltip: {
+            callbacks: {
+              title: (items) => items[0] ? dateLabels[items[0].dataIndex] : "",
+              label: (item) => `${instruments[item.dataIndex]}: ${item.raw>=0?"+":""}${item.raw}R`
+            }
+          }
+        },
+        scales: {
+          x: { grid:{ display:false }, ticks:{ color: tickColor, maxRotation:0, autoSkip:true, font:{size:10} } },
+          y: { grid:{ color: gridColor }, ticks:{ color: tickColor, font:{size:10} } }
+        }
+      }
+    });
+  }
+
+  // ---------------- Reset all data ----------------
+  $("#twc-reset-btn", root).addEventListener("click", async ()=>{
+    if(await showConfirm("Clear all logged trades? This can't be undone.")){
+      trades = [];
+      await saveTrades();
+      renderDashboard();
+      renderLog();
+      showToast("All trades cleared");
+    }
+  });
+
+  // ---------------- Import / Export trades (JSON) ----------------
+  // Export keeps each trade's real ID. Import then upserts by ID: a trade whose ID already
+  // exists gets updated in place, and only genuinely new trades get appended — so exporting
+  // from one device and importing on another merges cleanly instead of duplicating everything
+  // every time you sync.
+  async function handleImportFile(file){
+    try{
+      const text = await file.text();
+      const data = JSON.parse(text);
+      if(!Array.isArray(data)){
+        showToast("Import file must be a JSON array of trades");
+        return;
+      }
+      let added = 0, updated = 0;
+      data.forEach((raw, i)=>{
+        const t = Object.assign({}, raw);
+        const existingIdx = t.id ? trades.findIndex(x=>x.id===t.id) : -1;
+        if(existingIdx > -1){
+          trades[existingIdx] = Object.assign({}, trades[existingIdx], t);
+          updated++;
+        } else {
+          if(!t.id) t.id = "t_" + Date.now() + "_" + Math.random().toString(36).slice(2,7) + "_" + i;
+          if(!t.createdAt) t.createdAt = Date.now() + i;
+          trades.push(t);
+          added++;
+        }
+      });
+      await saveTrades();
+      renderDashboard();
+      renderLog();
+      showToast(`${added} new, ${updated} updated`);
+    }catch(e){
+      showToast("Couldn't read that file — make sure it's valid JSON");
+    }
+  }
+  $("#twc-import-btn", root).addEventListener("click", ()=> $("#twc-import-file", root).click());
+  $("#twc-import-file", root).addEventListener("change", async (e)=>{
+    const file = e.target.files[0];
+    if(file) await handleImportFile(file);
+    e.target.value = "";
+  });
+  $("#twc-export-btn", root).addEventListener("click", ()=>{
+    try{
+      const blob = new Blob([JSON.stringify(trades, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "trades_export_" + new Date().toISOString().slice(0,10) + ".json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(`Exported ${trades.length} trade${trades.length===1?'':'s'}`);
+    }catch(e){
+      showToast("Couldn't export — try again");
+    }
+  });
+
+  // ---------------- Init ----------------
+  (async function init(){
+    await loadTrades();
+    resetForm();
+    renderDashboard();
+  })();
+
+})();
+</script>
